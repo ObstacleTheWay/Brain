@@ -3,66 +3,84 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Stoics — Quote of the Day</title>
+    <title>Word of the Day</title>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap");
-
       :root {
-        --bg: #f3efe7;
-        --ink: #1c1b17;
-        --accent: #7b4f2e;
-        --accent-2: #2d3a2e;
-        --card: #fff8ee;
+        --bg: #f6f3ee;
+        --text: #1e1e1e;
+        --accent: #3a5a40;
       }
-
-      * { box-sizing: border-box; }
-
       html, body {
         height: 100%;
         margin: 0;
       }
-
       body {
-        font-family: "Crimson Text", "Georgia", serif;
-        color: var(--ink);
-        background:
-          radial-gradient(1200px 600px at 10% 0%, #fff6e6 0%, rgba(255, 246, 230, 0.6) 45%, transparent 60%),
-          radial-gradient(900px 400px at 100% 20%, #e9f2e6 0%, rgba(233, 242, 230, 0.5) 40%, transparent 60%),
-          linear-gradient(180deg, #f7f1e8 0%, var(--bg) 55%, #efe8db 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 20% 20%, #fff7e6 0%, var(--bg) 55%, #efe7dd 100%);
+        color: var(--text);
+        font-family: "Georgia", "Times New Roman", serif;
+      }
+      .card {
+        text-align: center;
+        padding: 2rem 3rem;
+        border: 1px solid #e0d7cc;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        max-width: 720px;
+      }
+      .word {
+        font-size: 36pt;
+        font-weight: 700;
+        color: var(--accent);
+        margin: 0 0 0.5rem 0;
+      }
+      .word-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .speak-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid #d6cec3;
+        background: #fff;
         display: grid;
         place-items: center;
-        padding: 24px;
+        cursor: pointer;
       }
-
-      .page {
-        width: min(960px, 100%);
+      .speak-btn:hover {
+        background: #f7f4ef;
       }
-
-      .title {
-        font-family: "Cinzel", serif;
-        font-size: clamp(24px, 4vw, 38px);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin: 0 0 10px 0;
-        color: var(--accent-2);
+      .definition {
+        font-size: 18pt;
+        margin: 0;
+        line-height: 1.4;
       }
-
-      .subtitle {
-        margin: 0 0 22px 0;
-        color: #4a433a;
-        font-size: 16px;
+      .meta {
+        margin-top: 0.75rem;
+        font-size: 10pt;
+        color: #6b6b6b;
       }
-
-      .card {
-        background: var(--card);
-        border: 1px solid #e2d8c6;
-        border-radius: 18px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        padding: clamp(18px, 4vw, 28px);
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 24px;
-        align-items: center;
+      .warning {
+        margin-top: 0.35rem;
+        font-size: 10pt;
+        color: #9b2c2c;
+      }
+      button.refresh {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        border: 1px solid #d6cec3;
+        background: #fff;
+        cursor: pointer;
+        font-size: 12pt;
+      }
+      button.refresh:hover {
+        background: #f7f4ef;
       }
       .actions {
         position: fixed;
@@ -88,15 +106,22 @@
       .icon-btn:hover {
         background: #f7f4ef;
       }
-      .label {
-        font-size: 10px;
-        color: var(--accent);
-        margin-top: 4px;
-        text-align: center;
+      .toast {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e1e1e;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
       }
-      .like-wrap {
-        display: grid;
-        justify-items: center;
+      .toast.show {
+        opacity: 1;
       }
       .sr-only {
         position: absolute;
@@ -108,103 +133,49 @@
         clip: rect(0, 0, 0, 0);
         border: 0;
       }
-
-      .quote {
-        font-size: clamp(20px, 3vw, 30px);
-        line-height: 1.35;
-        font-style: italic;
-        margin: 0 0 18px 0;
+      .label {
+        font-size: 10px;
+        color: #3a5a40;
+        margin-top: 4px;
+        text-align: center;
       }
-
-      .author {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--accent);
-        margin: 0 0 6px 0;
-      }
-
-      .work {
-        margin: 0 0 16px 0;
-        font-size: 15px;
-        color: #5b5146;
-      }
-
-      .meta {
-        font-size: 13px;
-        color: #6b6054;
-      }
-
-      .meta a {
-        color: #5b513f;
-        text-decoration: none;
-        border-bottom: 1px dotted #9b8d79;
-      }
-
-      .meta a:hover {
-        color: #3d3328;
-      }
-
-      figure {
-        margin: 0;
+      .like-wrap {
         display: grid;
-        gap: 10px;
-      }
-
-      .portrait {
-        width: 100%;
-        aspect-ratio: 4 / 5;
-        object-fit: cover;
-        border-radius: 14px;
-        border: 1px solid #e0d3bf;
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
-      }
-
-      figcaption {
-        font-size: 12px;
-        color: #6b6054;
-      }
-
-      @media (max-width: 820px) {
-        .card {
-          grid-template-columns: 1fr;
-        }
-      }
-      button.refresh {
-        margin-top: 10px;
-        padding: 0.55rem 1rem;
-        border-radius: 999px;
-        border: 1px solid #d6cec3;
-        background: #fff;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      button.refresh:hover {
-        background: #f7f4ef;
+        justify-items: center;
       }
     </style>
   </head>
   <body>
-    <main class="page">
-      <h1 class="title">Stoics</h1>
-      <p class="subtitle">Quote of the day from the great Stoic philosophers.</p>
-
-      <section class="card" aria-live="polite">
-        <div>
-          <p id="quote" class="quote">Loading…</p>
-          <p id="author" class="author"></p>
-          <p id="work" class="work"></p>
-          <p id="quoteSource" class="meta"></p>
-          <button class="refresh" id="refresh">Another quote</button>
-        </div>
-        <figure>
-          <img id="portrait" class="portrait" alt="" />
-          <figcaption id="imageCredit"></figcaption>
-        </figure>
-      </section>
-    </main>
+    <div class="card">
+      <div class="word-row">
+        <div id="word" class="word">Loading…</div>
+        <button class="speak-btn" id="speakBtn" aria-label="Pronounce word in English">
+          <svg width="20" height="14" viewBox="0 0 64 40" fill="none" stroke="#3a5a40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 18c8 12 20 18 30 18s22-6 30-18C54 6 42 2 32 2S10 6 2 18z" fill="#3a5a40"/>
+            <path d="M10 18c6 6 14 10 22 10s16-4 22-10" stroke="#f6f3ee"/>
+          </svg>
+          <span class="sr-only">Pronounce</span>
+        </button>
+        <button class="speak-btn" id="speakBtnZh" aria-label="Pronounce word in Chinese">
+          <svg width="20" height="14" viewBox="0 0 60 40" aria-hidden="true">
+            <rect width="60" height="40" fill="#de2910"/>
+            <polygon points="8,6 10.5,13 3.5,8.7 12.5,8.7 5.5,13" fill="#ffde00"/>
+            <polygon points="18,6 19.2,8.8 16.3,7 19.7,7 16.8,8.8" fill="#ffde00"/>
+            <polygon points="22,12 23.2,14.8 20.3,13 23.7,13 20.8,14.8" fill="#ffde00"/>
+            <polygon points="22,20 23.2,22.8 20.3,21 23.7,21 20.8,22.8" fill="#ffde00"/>
+            <polygon points="18,26 19.2,28.8 16.3,27 19.7,27 16.8,28.8" fill="#ffde00"/>
+          </svg>
+          <span class="sr-only">Pronounce in Chinese</span>
+        </button>
+      </div>
+      <div id="definition" class="definition">Please wait</div>
+      <button class="refresh" id="refresh">New word</button>
+      <div id="meta" class="meta"></div>
+      <div id="warning" class="warning"></div>
+    </div>
 
     <div class="actions">
-      <button class="icon-btn" id="shareBtn" aria-label="Share quote">
+      <button class="icon-btn" id="shareBtn" aria-label="Share word of the day">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3a5a40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="18" cy="5" r="3"></circle>
           <circle cx="6" cy="12" r="3"></circle>
@@ -218,7 +189,7 @@
         <a
           class="icon-btn"
           aria-label="I like the app"
-          href="mailto:drchan2015@gmail.com?subject=I%20like%20your%20Stoics%20Quote%20app&body=Hi%2C%0D%0AI%20like%20your%20Stoics%20Quote%20app.%20Thanks%21"
+          href="mailto:drchan2015@gmail.com?subject=I%20like%20your%20Word%20of%20the%20Day%20app&body=Hi%2C%0D%0AI%20like%20your%20Word%20of%20the%20Day%20app.%20Thanks%21"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="#3a5a40" stroke="#3a5a40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M20.8 8.6c0-2.1-1.7-3.8-3.8-3.8-1.6 0-2.9.8-3.6 2-0.7-1.2-2-2-3.6-2-2.1 0-3.8 1.7-3.8 3.8 0 4.6 7.4 9 7.4 9s7.4-4.4 7.4-9z"/>
@@ -229,80 +200,112 @@
       </div>
     </div>
 
+    <div id="toast" class="toast">Copied to clipboard</div>
+
     <script>
-      const stoics = [
-        {
-          name: "Marcus Aurelius",
-          quote: "As are your repeated imaginations so will your mind be, for the soul is dyed by its imaginations.",
-          work: "Meditations, Book V",
-          quoteSource: "https://en.wikisource.org/wiki/Meditations#Book_5",
-          imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/16/Marcus_Aurelius_Metropolitan_Museum.png",
-          imageAlt: "Bust of Marcus Aurelius",
-          imageCredit: "Image: Metropolitan Museum of Art, public domain",
-          imageSource: "https://commons.wikimedia.org/wiki/File:Marcus_Aurelius_Metropolitan_Museum.png"
-        },
-        {
-          name: "Seneca",
-          quote: "It is not that we have a short space of time, but that we waste much of it.",
-          work: "On the Shortness of Life, Chapter I",
-          quoteSource: "https://en.wikisource.org/wiki/On_the_shortness_of_life/Chapter_I",
-          imageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9f/The_bust_of_Seneca%2C_in_a_niche_MET_DP878727.jpg",
-          imageAlt: "Bust of Seneca",
-          imageCredit: "Image: Metropolitan Museum of Art, CC0",
-          imageSource: "https://commons.wikimedia.org/wiki/File:The_bust_of_Seneca,_in_a_niche_MET_DP878727.jpg"
-        },
-        {
-          name: "Epictetus",
-          quote: "Seek not that the things which happen should happen as you wish; but wish the things which happen to be as they are.",
-          work: "The Encheiridion (Manual), VIII",
-          quoteSource: "https://en.wikisource.org/wiki/The_Discourses_of_Epictetus/The_Encheiridion_(Manual)",
-          imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/12/Epictetus.png",
-          imageAlt: "Bust of Epictetus",
-          imageCredit: "Image: public domain",
-          imageSource: "https://commons.wikimedia.org/wiki/File:Epictetus.png"
-        }
+      const uncommonWords = [
+        "abditive","acnestis","acumen","adumbrate","aeonian","agelast","albescent","alef","anfractuous",
+        "anopisthographic","apricity","ataraxia","borborygmus","brontide","cacography","cacoethes",
+        "callipygian","chiaroscuro","clinamen","concinnity","crepuscular","defenestrate","deliquescent",
+        "deliquesce","desuetude","diaphanous","eleemosynary","elision","empyrean","ensconced","epenthesis",
+        "eremocracy","erubescent","eurhythmic","eutrapelia","exiguous","farrago","fatuous","febrifuge",
+        "floccinaucinihilipilification","frangipani","fugacious","gallimaufry","glabrous","graniloquent",
+        "halcyon","hebetude","inchoate","insondable","juxtapose","lachrymose","lagnappe","lambent",
+        "lemmatize","limerence","lugubrious","mellifluous","nepenthe","noctivagant","obdurate","onychophagy",
+        "orotund","palimpsest","pareidolia","periplous","persiflage","pleonasm","pulchritude","quiddity",
+        "recondite","refulgent","resplendent","rhodomontade","sesquipedalian","somnambulism","susurrus",
+        "thalassic","tintinnabulation","truculent","ultracrepidarian","umbrage","velleity","vicissitude",
+        "zenithal"
       ];
 
-      function dayOfYear(date) {
-        const start = new Date(date.getFullYear(), 0, 0);
-        const diff = date - start;
-        return Math.floor(diff / 86400000);
+      function getTodayKey() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, "0");
+        const d = String(now.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
       }
 
-      function setQuote(entry) {
-        document.getElementById("quote").textContent = `“${entry.quote}”`;
-        document.getElementById("author").textContent = entry.name;
-        document.getElementById("work").textContent = entry.work;
-        document.getElementById("quoteSource").innerHTML = `Source: <a href="${entry.quoteSource}" target="_blank" rel="noreferrer">Text</a>`;
-
-        const img = document.getElementById("portrait");
-        img.src = entry.imageUrl;
-        img.alt = entry.imageAlt;
-        document.getElementById("imageCredit").innerHTML = `${entry.imageCredit}. <a href="${entry.imageSource}" target="_blank" rel="noreferrer">Details</a>`;
+      function hashString(str) {
+        let h = 2166136261;
+        for (let i = 0; i < str.length; i++) {
+          h ^= str.charCodeAt(i);
+          h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+        }
+        return Math.abs(h);
       }
 
-      function setQuoteOfDay() {
-        const today = new Date();
-        const idx = dayOfYear(today) % stoics.length;
-        const entry = stoics[idx];
-        setQuote(entry);
+      function pickDailyWord() {
+        const today = getTodayKey();
+        const cachedDate = localStorage.getItem("wod-date");
+        const cachedWord = localStorage.getItem("wod-word");
+
+        if (cachedDate === today && cachedWord) {
+          return cachedWord;
+        }
+
+        const idx = hashString(today) % uncommonWords.length;
+        const word = uncommonWords[idx];
+        localStorage.setItem("wod-date", today);
+        localStorage.setItem("wod-word", word);
+        return word;
       }
 
-      function setRandomQuote() {
-        const idx = Math.floor(Math.random() * stoics.length);
-        setQuote(stoics[idx]);
+      function pickRandomWord() {
+        const idx = Math.floor(Math.random() * uncommonWords.length);
+        return uncommonWords[idx];
+      }
+
+      function cleanHtml(html) {
+        const tmp = document.createElement("div");
+        tmp.innerHTML = html;
+        return (tmp.textContent || "").trim();
+      }
+
+      async function fetchDefinition(word) {
+        const url = `https://en.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(word)}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Definition request failed");
+        const data = await res.json();
+
+        const entries = data.en || [];
+        for (const entry of entries) {
+          const defs = entry.definitions || [];
+          for (const def of defs) {
+            if (def.definition) return cleanHtml(def.definition);
+          }
+        }
+        return "";
+      }
+
+      async function loadWord(word) {
+        const wordEl = document.getElementById("word");
+        const defEl = document.getElementById("definition");
+        const metaEl = document.getElementById("meta");
+
+        wordEl.textContent = "Loading…";
+        defEl.textContent = "Please wait";
+        metaEl.textContent = "Source: Wiktionary";
+
+        try {
+          const definition = await fetchDefinition(word);
+          wordEl.textContent = word;
+          defEl.textContent = definition || "Definition not found for this word.";
+        } catch (err) {
+          wordEl.textContent = word;
+          defEl.textContent = "Could not load the definition. Please try again.";
+        }
       }
 
       function getShareText() {
-        const quote = document.getElementById("quote").textContent;
-        const author = document.getElementById("author").textContent;
-        const work = document.getElementById("work").textContent;
-        return `${quote} — ${author} (${work})`;
+        const word = document.getElementById("word").textContent;
+        const def = document.getElementById("definition").textContent;
+        return `Word of the Day: ${word} — ${def}`;
       }
 
-      async function shareQuote() {
+      async function shareWord() {
         const text = getShareText();
-        const title = "Stoics — Quote of the Day";
+        const title = "Word of the Day";
 
         if (navigator.share) {
           try {
@@ -313,16 +316,118 @@
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(text);
-          alert("Copied to clipboard");
+          showToast("Copied to clipboard");
         } else {
-          alert("Sharing not supported");
+          showToast("Sharing not supported");
         }
       }
 
-      document.getElementById("refresh").addEventListener("click", setRandomQuote);
-      document.getElementById("shareBtn").addEventListener("click", shareQuote);
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1400);
+      }
 
-      setQuoteOfDay();
+      function getVoicesAsync() {
+        return new Promise((resolve) => {
+          const existing = window.speechSynthesis.getVoices();
+          if (existing && existing.length) {
+            resolve(existing);
+            return;
+          }
+          const onChange = () => {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices && voices.length) {
+              window.speechSynthesis.removeEventListener("voiceschanged", onChange);
+              resolve(voices);
+            }
+          };
+          window.speechSynthesis.addEventListener("voiceschanged", onChange);
+          setTimeout(() => {
+            window.speechSynthesis.removeEventListener("voiceschanged", onChange);
+            resolve(window.speechSynthesis.getVoices() || []);
+          }, 800);
+        });
+      }
+
+      async function checkChineseVoice() {
+        if (!("speechSynthesis" in window)) {
+          document.getElementById("warning").textContent = "Speech not supported in this browser.";
+          return;
+        }
+        const voices = await getVoicesAsync();
+        const hasZh = voices.some((v) => v.lang && v.lang.toLowerCase().startsWith("zh"));
+        document.getElementById("warning").textContent = hasZh
+          ? ""
+          : "No Chinese voice installed. Add one in System Settings → Accessibility → Spoken Content.";
+      }
+
+      async function speakWordLang(lang, text) {
+        if (!text || text === "Loading…" || text === "Unavailable") {
+          showToast("No word to pronounce");
+          return;
+        }
+
+        if (!("speechSynthesis" in window)) {
+          showToast("Speech not supported");
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voices = await getVoicesAsync();
+        const exact = voices.find((v) => v.lang === lang);
+        const partial = voices.find((v) => v.lang && v.lang.toLowerCase().startsWith(lang.slice(0, 2).toLowerCase()));
+        if (exact || partial) {
+          utterance.voice = exact || partial;
+        }
+        utterance.lang = (exact || partial) ? (exact || partial).lang : lang;
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      }
+
+      async function translateToMandarin(word) {
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|zh-CN`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Translation request failed");
+        const data = await res.json();
+        if (data.responseStatus !== 200) throw new Error("Translation error");
+        return (data.responseData && data.responseData.translatedText) ? data.responseData.translatedText : "";
+      }
+
+      document.getElementById("refresh").addEventListener("click", () => {
+        const word = pickRandomWord();
+        loadWord(word);
+      });
+      document.getElementById("shareBtn").addEventListener("click", shareWord);
+      document.getElementById("speakBtn").addEventListener("click", () => {
+        const word = document.getElementById("word").textContent;
+        speakWordLang("en-US", word);
+      });
+      document.getElementById("speakBtnZh").addEventListener("click", async () => {
+        const word = document.getElementById("word").textContent;
+        try {
+          const zh = await translateToMandarin(word);
+          document.getElementById("meta").textContent = zh ? `Mandarin: ${zh} (via MyMemory)` : "Mandarin: unavailable";
+          if (zh) {
+            await speakWordLang("zh-CN", zh);
+          } else {
+            showToast("Translation unavailable");
+          }
+        } catch (e) {
+          document.getElementById("meta").textContent = "Mandarin: unavailable";
+          showToast("Translation unavailable");
+        }
+      });
+
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.addEventListener("voiceschanged", checkChineseVoice);
+      }
+
+      loadWord(pickDailyWord());
+      checkChineseVoice();
     </script>
   </body>
 </html>
